@@ -11,13 +11,13 @@ import { getContacts, getFilter} from 'redux/selectors';
 export const Contacts = () => {
   const dispatch = useDispatch();
   const contacts = useSelector(getContacts);
-  const filters = useSelector(getFilter);
-  console.log(contacts)
+  const filter = useSelector(getFilter);
+
   return (
     <>
       <Filter />
       <ContactsList>
-        {contacts.filter(({ name }) => name.toLowerCase()?.includes(filters))
+        {contacts.filter(({ name }) => name.toLowerCase()?.includes(filter))
           .map(({ id, name, number }) => (
             <ContactsItem key={id}>
               {name}: {number}

@@ -2,10 +2,12 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const filterSlice = createSlice({
   name: 'filter',
-  initialState: '',
+  initialState: {
+    filter: '',
+  },
   reducers: {
     filterUserByName(state, action) {
-      state = action.payload;
+      state.filter = action.payload;
     },
   },
 });

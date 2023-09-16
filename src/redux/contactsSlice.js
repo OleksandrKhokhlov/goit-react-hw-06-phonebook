@@ -30,13 +30,13 @@ const contactsSlice = createSlice({
 });
 
 const persistConfig = {
-  key: 'root',
+  key: 'contacts',
   storage,
 };
-
 export const contactReducer = persistReducer(
   persistConfig,
   contactsSlice.reducer
 );
+console.log(persistConfig)
 
 export const { addContact, removeContact } = contactsSlice.actions;

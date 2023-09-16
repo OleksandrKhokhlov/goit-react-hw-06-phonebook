@@ -1,7 +1,9 @@
 import * as Yup from 'yup';
-import { nanoid } from 'nanoid';
-import { Formik, Field, Form, ErrorMessage } from 'formik';
-import { AddButton, EntryField } from './ContactForm.styled ';
+import { Formik, Field, Form } from 'formik';
+import { AddButton,  EntryField,  ErrorMsg } from './ContactForm.styled ';
+import { useDispatch, useSelector } from 'react-redux';
+import { addContact } from 'redux/contactsSlice';
+import { getContacts } from 'redux/selectors';
 
 const nameRegExp =
   /^[a-zA-Zа-яА-Я]+(([' \\-][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$/;
@@ -16,19 +18,29 @@ const schema = Yup.object().shape({
       nameRegExp,
       ` Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan`
     ),
-  number: Yup.string().matches(
-    phoneRegExp,
-    'Phone number must be digits and can contain spaces, dashes, parentheses and can start with +'
-  ),
+  number: Yup.string()
+    .required('Required')
+    .matches(
+      phoneRegExp,
+      'Phone number must be digits and can contain spaces, dashes, parentheses and can start with +'
+    ),
 });
 
-export const ContactForm = ({ onAdd, contacts }) => {
-  
+export const ContactForm = () => {
+  const dispatch = useDispatch();
+  const contacts = useSelector(getContacts);
+
   const handlerSubmit = (values, actions) => {
-    const overlap = contacts.map(contact => contact.name).includes(values.name);
+    const handlerAddContact = () => dispatch(addContact(values));
+
+    const overlap = contacts
+      .map(({ name }) => name)
+      .includes(values.name);
+
     overlap
       ? alert(`${values.name} is already in contacts`)
-      : onAdd({ ...values, id: nanoid() });
+      : handlerAddContact();
+
     actions.resetForm();
   };
 
@@ -47,12 +59,12 @@ export const ContactForm = ({ onAdd, contacts }) => {
           Name
           <Field id="name" type="text" name="name" />
         </EntryField>
-        <ErrorMessage name="name" />
+        <ErrorMsg name="name" component='span' />
         <EntryField htmlFor="number">
           Number
           <Field id="number" type="tel" name="number" />
         </EntryField>
-        <ErrorMessage name="number" />
+        <ErrorMsg name="number" component='span' />
         <AddButton type="submit">Add contact</AddButton>
       </Form>
     </Formik>

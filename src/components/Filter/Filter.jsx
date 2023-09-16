@@ -1,17 +1,21 @@
-export const Filter = ({ onChange }) => {
+import { useDispatch } from "react-redux";
+import { filterUserByName } from "redux/filterSlice";
+import { FilterLabel } from "./Filter.styled";
+
+export const Filter = () => {
+  const dispatch = useDispatch();
+
   return (
     <>
-      <label htmlFor="filter">
-        Find contacts by name  
+      <FilterLabel htmlFor="filter">
+        Find contacts by name
         <input
           type="text"
           id="filter"
           name="filter"
-          onChange={evt => {
-            onChange(evt.target.value);
-          }}
+          onChange={evt => dispatch(filterUserByName(evt.target.value.toLowerCase()))}
         />
-      </label>
+      </FilterLabel>
     </>
   );
 };
